@@ -1,0 +1,552 @@
+{
+    "scene": {
+        "id": 408970,
+        "name": "Village Forestier",
+        "data": {
+            "width": 4000,
+            "height": 3000,
+            "backgroundColor": "#ffffff",
+            "layers": {
+                "95330eff-b3f4-47cf-addd-7513537126c5": {
+                    "key": "95330eff-b3f4-47cf-addd-7513537126c5",
+                    "name": "Background",
+                    "locked": true,
+                    "token": false,
+                    "gm": false,
+                    "lighting": false,
+                    "visible": true,
+                    "items": {
+                        "eff39a68-fde1-4051-b307-55ff859a0e6f": {
+                            "key": "eff39a68-fde1-4051-b307-55ff859a0e6f",
+                            "type": "image",
+                            "zIndex": 0,
+                            "x": 0,
+                            "y": 0,
+                            "id": "18a3656b38854ea5adaa9896b9f1d527",
+                            "width": 4000,
+                            "height": 3000,
+                            "path": "a/7/v18ea365kntrowoz6lc8nldvr5e7sm.jpg",
+                            "userId": 78229
+                        }
+                    },
+                    "position": 0
+                },
+                "f046e59c-297f-47bb-abce-066b1e966f1d": {
+                    "key": "f046e59c-297f-47bb-abce-066b1e966f1d",
+                    "name": "Drawings",
+                    "locked": false,
+                    "token": false,
+                    "gm": false,
+                    "lighting": false,
+                    "visible": true,
+                    "items": {},
+                    "position": 1,
+                    "drawings": true,
+                    "drawingItems": {
+                        "rc8yf23nhs": {
+                            "zIndex": 0,
+                            "key": "rc8yf23nhs",
+                            "userId": 87530,
+                            "type": "arrow",
+                            "position": {
+                                "x": 3132.4031167986504,
+                                "y": 1480.920056083718
+                            },
+                            "color": "rgb(0, 0, 0)",
+                            "weight": 3,
+                            "arrowSize": 10,
+                            "begin": false,
+                            "to": {
+                                "x": 315.4061911037534,
+                                "y": -112.35499511421267
+                            },
+                            "node": null
+                        },
+                        "t4p1ovkdv2m": {
+                            "zIndex": 0,
+                            "key": "t4p1ovkdv2m",
+                            "userId": 87530,
+                            "type": "arrow",
+                            "position": {
+                                "x": 3397.7233462249837,
+                                "y": 1411.8826494472742
+                            },
+                            "color": "rgb(0, 0, 0)",
+                            "weight": 3,
+                            "arrowSize": 10,
+                            "begin": false,
+                            "to": {
+                                "x": 0,
+                                "y": 0
+                            },
+                            "node": null
+                        },
+                        "70qsfma8ic": {
+                            "zIndex": 0,
+                            "key": "70qsfma8ic",
+                            "userId": 87530,
+                            "type": "arrow",
+                            "position": {
+                                "x": 3358.466781667006,
+                                "y": 1490.39577856323
+                            },
+                            "color": "rgb(0, 0, 0)",
+                            "weight": 3,
+                            "arrowSize": 10,
+                            "begin": false,
+                            "to": {
+                                "x": 17.597770319093343,
+                                "y": 162.44095679163274
+                            },
+                            "node": null
+                        },
+                        "fp12838i4ng": {
+                            "zIndex": 0,
+                            "key": "fp12838i4ng",
+                            "userId": 87530,
+                            "type": "arrow",
+                            "position": {
+                                "x": 3309.734494629516,
+                                "y": 1552.6648120000225
+                            },
+                            "color": "rgb(0, 0, 0)",
+                            "weight": 3,
+                            "arrowSize": 10,
+                            "begin": false,
+                            "to": {
+                                "x": -35.19554063818714,
+                                "y": 47.378612397559436
+                            },
+                            "node": null
+                        },
+                        "x07rig0874": {
+                            "zIndex": 0,
+                            "key": "x07rig0874",
+                            "userId": 87530,
+                            "type": "arrow",
+                            "position": {
+                                "x": 3250.1728104725844,
+                                "y": 1570.2625823191158
+                            },
+                            "color": "rgb(0, 0, 0)",
+                            "weight": 3,
+                            "arrowSize": 10,
+                            "begin": false,
+                            "to": {
+                                "x": 162.4409567916323,
+                                "y": -52.79331095728048
+                            },
+                            "node": null
+                        },
+                        "q2vtrhfeug": {
+                            "zIndex": 0,
+                            "key": "q2vtrhfeug",
+                            "userId": 87530,
+                            "type": "arrow",
+                            "position": {
+                                "x": 3508.724666699266,
+                                "y": 1321.1864485719457
+                            },
+                            "color": "rgb(0, 0, 0)",
+                            "weight": 3,
+                            "arrowSize": 10,
+                            "begin": false,
+                            "to": {
+                                "x": -52.79331095728048,
+                                "y": -9.47572247951166
+                            },
+                            "node": null
+                        },
+                        "a4d6qv8lrve": {
+                            "zIndex": 0,
+                            "key": "a4d6qv8lrve",
+                            "userId": 87530,
+                            "type": "line",
+                            "position": {
+                                "x": 1327.1592177616074,
+                                "y": 1098.9374457353124
+                            },
+                            "color": "rgb(0, 0, 0)",
+                            "weight": 3,
+                            "to": {
+                                "x": 1210.5676603133918,
+                                "y": 357.21668664985305
+                            },
+                            "node": null
+                        },
+                        "9v1a1e8g02": {
+                            "zIndex": 0,
+                            "key": "9v1a1e8g02",
+                            "userId": 87530,
+                            "type": "line",
+                            "position": {
+                                "x": 2569.975606730888,
+                                "y": 1446.2314466448918
+                            },
+                            "color": "rgb(0, 0, 0)",
+                            "weight": 3,
+                            "to": {
+                                "x": -1198.164303138049,
+                                "y": -305.1225865134163
+                            },
+                            "node": null
+                        }
+                    }
+                },
+                "2d9ae705-7467-40f4-9b55-060397127127": {
+                    "key": "2d9ae705-7467-40f4-9b55-060397127127",
+                    "name": "Tokens",
+                    "locked": false,
+                    "token": true,
+                    "gm": false,
+                    "lighting": false,
+                    "visible": true,
+                    "items": {
+                        "be794866-9a70-491d-a818-13e772be41ca": {
+                            "key": "be794866-9a70-491d-a818-13e772be41ca",
+                            "type": "token",
+                            "x": 3189,
+                            "y": 1590,
+                            "id": 318957,
+                            "path": "2/n/vq2hdz6hqdpiathjj5a6muhwy4v28l.png",
+                            "userId": 91416,
+                            "character": {
+                                "id": 318957,
+                                "name": "Alton Jaune"
+                            },
+                            "frame": null,
+                            "controls": [
+                                91416
+                            ],
+                            "width": 150,
+                            "height": 150,
+                            "zIndex": 3,
+                            "transformation": {
+                                "scale": 0.767,
+                                "rotation": 0,
+                                "x": -0.583,
+                                "y": -0.583
+                            }
+                        },
+                        "3e170dbe-9fa2-4811-b8e1-4f526427482c": {
+                            "key": "3e170dbe-9fa2-4811-b8e1-4f526427482c",
+                            "type": "token",
+                            "x": 2912,
+                            "y": 1557,
+                            "id": 312807,
+                            "path": "3/t/xug67gcmb8ykxdwnh58mz8ngyhq5by.png",
+                            "userId": 81382,
+                            "character": {
+                                "id": 312807,
+                                "name": "Ariurdred Forge-éclair"
+                            },
+                            "frame": null,
+                            "controls": [
+                                81382
+                            ],
+                            "width": 150,
+                            "height": 150,
+                            "zIndex": 4,
+                            "aura": {
+                                "text": "",
+                                "color": "#424242",
+                                "icons": [],
+                                "shared": true
+                            },
+                            "bars": {
+                                "bar1": {
+                                    "enabled": false,
+                                    "shared": false,
+                                    "valueType": "custom",
+                                    "value": 2,
+                                    "maxType": "custom",
+                                    "max": 2,
+                                    "color": "#d6d315",
+                                    "connected": false,
+                                    "connectedValue": null,
+                                    "connectedMax": null,
+                                    "connectedId": null
+                                },
+                                "bar2": {
+                                    "enabled": false,
+                                    "shared": false,
+                                    "valueType": "custom",
+                                    "value": 0,
+                                    "maxType": "custom",
+                                    "max": 0,
+                                    "color": "#149694",
+                                    "connected": false,
+                                    "connectedValue": null,
+                                    "connectedMax": null,
+                                    "connectedId": null
+                                }
+                            },
+                            "transformation": {
+                                "scale": 0.676,
+                                "rotation": 0,
+                                "x": -0.811,
+                                "y": 67.868
+                            }
+                        },
+                        "f9b47fb6-bf21-4d03-a7a7-0b34be7b3479": {
+                            "key": "f9b47fb6-bf21-4d03-a7a7-0b34be7b3479",
+                            "type": "token",
+                            "x": 2788,
+                            "y": 1394,
+                            "id": 312726,
+                            "path": "l/a/h2idzm54z2yrfludr63alefxcnk6j0.png",
+                            "userId": 81370,
+                            "character": {
+                                "id": 312726,
+                                "name": "Turuk"
+                            },
+                            "frame": null,
+                            "controls": [
+                                81370
+                            ],
+                            "width": 150,
+                            "height": 150,
+                            "zIndex": 5,
+                            "aura": {
+                                "text": "Prêt à casser des culs",
+                                "color": "#2b38cc",
+                                "icons": [
+                                    {
+                                        "pack": "default",
+                                        "path": "icons/4ofor0nyu71zi2xg.jpg"
+                                    }
+                                ],
+                                "shared": true
+                            },
+                            "bars": {
+                                "bar1": {
+                                    "enabled": true,
+                                    "shared": true,
+                                    "valueType": "custom",
+                                    "value": 21,
+                                    "maxType": "custom",
+                                    "max": 21,
+                                    "color": "#23b923",
+                                    "connected": true,
+                                    "connectedValue": "hp",
+                                    "connectedMax": "hpmax",
+                                    "connectedId": "HP"
+                                },
+                                "bar2": {
+                                    "enabled": false,
+                                    "shared": false,
+                                    "valueType": "custom",
+                                    "value": 0,
+                                    "maxType": "custom",
+                                    "max": 0,
+                                    "color": "#149694",
+                                    "connected": false,
+                                    "connectedValue": null,
+                                    "connectedMax": null,
+                                    "connectedId": null
+                                }
+                            },
+                            "transformation": {
+                                "scale": 0.773,
+                                "rotation": -20.75,
+                                "x": 17.871,
+                                "y": 58.941
+                            }
+                        },
+                        "f1a77786-08c8-462f-aead-9cd779228fa5": {
+                            "key": "f1a77786-08c8-462f-aead-9cd779228fa5",
+                            "type": "craft",
+                            "x": 3199,
+                            "y": 1218,
+                            "id": 436027,
+                            "path": "i/5/1vyl63o6q81riqg3f6mjuv5dsdbbq8.png",
+                            "craft": {
+                                "id": 436027,
+                                "keyid": "dbXqO36fH7QLrxd5jh80ZwedaBcROAB6",
+                                "name": "Personnage sans titre",
+                                "color": null
+                            },
+                            "frame": null,
+                            "width": 150,
+                            "height": 150,
+                            "zIndex": 9,
+                            "controls": [
+                                78229
+                            ],
+                            "userId": 78229,
+                            "transformation": {
+                                "scale": 0.644,
+                                "rotation": 0,
+                                "x": 0,
+                                "y": 0
+                            }
+                        },
+                        "98bd348f-8331-4ccb-b9a6-fd5c95a723a5": {
+                            "key": "98bd348f-8331-4ccb-b9a6-fd5c95a723a5",
+                            "type": "token",
+                            "x": 2802,
+                            "y": 1751,
+                            "id": 312814,
+                            "path": "d/r/lcw1pljk34d4aa7i0fkixksw6c7n70.png",
+                            "userId": 78230,
+                            "character": {
+                                "id": 312814,
+                                "name": "Lee Goulas"
+                            },
+                            "frame": null,
+                            "controls": [
+                                78230
+                            ],
+                            "width": 150,
+                            "height": 150,
+                            "zIndex": 13,
+                            "transformation": {
+                                "scale": 0.775,
+                                "rotation": 0,
+                                "x": -0.561,
+                                "y": -0.561
+                            }
+                        },
+                        "01192fe2-fb2a-4e08-9b10-a5fbaaa5266e": {
+                            "key": "01192fe2-fb2a-4e08-9b10-a5fbaaa5266e",
+                            "type": "token",
+                            "x": 2682,
+                            "y": 1390,
+                            "id": 312813,
+                            "path": "8/8/y8d51rc3wcn87npwxli420hflg2hjs.png",
+                            "userId": 81383,
+                            "character": {
+                                "id": 312813,
+                                "name": "Valen Sol"
+                            },
+                            "frame": null,
+                            "controls": [
+                                81383
+                            ],
+                            "width": 150,
+                            "height": 150,
+                            "zIndex": 14,
+                            "aura": {
+                                "text": "",
+                                "color": "#424242",
+                                "icons": [],
+                                "shared": true
+                            },
+                            "bars": {
+                                "bar1": {
+                                    "enabled": false,
+                                    "shared": false,
+                                    "valueType": "custom",
+                                    "value": 0,
+                                    "maxType": "custom",
+                                    "max": 0,
+                                    "color": "#a81e14",
+                                    "connected": false,
+                                    "connectedValue": null,
+                                    "connectedMax": null,
+                                    "connectedId": null
+                                },
+                                "bar2": {
+                                    "enabled": false,
+                                    "shared": false,
+                                    "valueType": "custom",
+                                    "value": 0,
+                                    "maxType": "custom",
+                                    "max": 0,
+                                    "color": "#149694",
+                                    "connected": false,
+                                    "connectedValue": null,
+                                    "connectedMax": null,
+                                    "connectedId": null
+                                }
+                            },
+                            "transformation": {
+                                "scale": 0.545,
+                                "rotation": 0,
+                                "x": 24.04,
+                                "y": 89.176
+                            }
+                        },
+                        "6887ddb4-f133-451a-b593-6902589dd764": {
+                            "key": "6887ddb4-f133-451a-b593-6902589dd764",
+                            "type": "token",
+                            "x": 2303,
+                            "y": 1458,
+                            "id": 312789,
+                            "path": "1/d/sylmue7j18dtgfm5gs3dclkyrz0tiu.png",
+                            "userId": 87530,
+                            "character": {
+                                "id": 312789,
+                                "name": "thalgrum"
+                            },
+                            "frame": null,
+                            "controls": [
+                                87530
+                            ],
+                            "width": 150,
+                            "height": 150,
+                            "zIndex": 17,
+                            "aura": {
+                                "text": "",
+                                "color": "#83179c",
+                                "icons": [],
+                                "shared": true
+                            },
+                            "bars": {
+                                "bar1": {
+                                    "enabled": false,
+                                    "shared": false,
+                                    "valueType": "custom",
+                                    "value": 0,
+                                    "maxType": "custom",
+                                    "max": 0,
+                                    "color": "#a81e14",
+                                    "connected": false,
+                                    "connectedValue": null,
+                                    "connectedMax": null,
+                                    "connectedId": null
+                                },
+                                "bar2": {
+                                    "enabled": false,
+                                    "shared": false,
+                                    "valueType": "custom",
+                                    "value": 0,
+                                    "maxType": "custom",
+                                    "max": 0,
+                                    "color": "#149694",
+                                    "connected": false,
+                                    "connectedValue": null,
+                                    "connectedMax": null,
+                                    "connectedId": null
+                                }
+                            }
+                        }
+                    },
+                    "position": 2
+                }
+            },
+            "grid": {
+                "enabled": false,
+                "type": "square",
+                "size": 100,
+                "color": "#000000",
+                "opacity": 0.7,
+                "snap": true
+            },
+            "metrics": {
+                "baseCount": 1,
+                "baseType": "unit",
+                "equalCount": 5,
+                "equalType": "ft"
+            },
+            "fog": {
+                "enabled": false,
+                "points": []
+            }
+        }
+    },
+    "dmSceneId": 408970,
+    "playerSceneId": 408970,
+    "c": "scene",
+    "a": "display"
+}

@@ -1,0 +1,61 @@
+
+{
+    "sceneId": 408970,
+    "token": {
+        "key": "6887ddb4-f133-451a-b593-6902589dd764",
+        "type": "token",
+        "x": 2234,
+        "y": 1411,
+        "id": 312789,
+        "path": "1/d/sylmue7j18dtgfm5gs3dclkyrz0tiu.png",
+        "userId": 87530,
+        "character": {
+            "id": 312789,
+            "name": "thalgrum"
+        },
+        "frame": null,
+        "controls": [
+            87530
+        ],
+        "width": 150,
+        "height": 150,
+        "zIndex": 17,
+        "aura": {
+            "text": "",
+            "color": "#83179c",
+            "icons": [],
+            "shared": true
+        },
+        "bars": {
+            "bar1": {
+                "enabled": false,
+                "shared": false,
+                "valueType": "custom",
+                "value": 0,
+                "maxType": "custom",
+                "max": 0,
+                "color": "#a81e14",
+                "connected": false,
+                "connectedValue": null,
+                "connectedMax": null,
+                "connectedId": null
+            },
+            "bar2": {
+                "enabled": false,
+                "shared": false,
+                "valueType": "custom",
+                "value": 0,
+                "maxType": "custom",
+                "max": 0,
+                "color": "#149694",
+                "connected": false,
+                "connectedValue": null,
+                "connectedMax": null,
+                "connectedId": null
+            }
+        }
+    },
+    "layer": "2d9ae705-7467-40f4-9b55-060397127127",
+    "c": "scene",
+    "a": "addToken"
+}
