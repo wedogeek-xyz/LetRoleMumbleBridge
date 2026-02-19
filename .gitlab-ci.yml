@@ -68,19 +68,7 @@ release:
   release:
     tag_name: $CI_COMMIT_TAG
     name: "Release $CI_COMMIT_TAG"
-    description: |
-      ## Let's Role · Spatial Audio $CI_COMMIT_TAG
-
-      ### Téléchargements
-
-      | Fichier | Description |
-      |---|---|
-      | `mumble-bridge.zip` | Pont Mumble — extraire et lancer `run.bat` (Python requis) |
-      | `lets-role-spatial-audio.zip` | Extension Chrome |
-
-      ### Prérequis pont Mumble
-      - [Python 3.x](https://www.python.org/downloads/) avec "Add to PATH" coché
-      - Double-cliquer sur `run.bat` — les dépendances s'installent automatiquement
+    description: "## Let's Role · Spatial Audio\n\n### Téléchargements\n\n- **mumble-bridge.zip** : Pont Mumble — extraire et lancer run.bat (Python requis)\n- **lets-role-spatial-audio.zip** : Extension Chrome\n\n### Prérequis pont Mumble\n- Python 3.x avec 'Add to PATH' coché\n- Double-cliquer sur run.bat pour démarrer"
     assets:
       links:
         - name: "mumble-bridge.zip"
