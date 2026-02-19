@@ -15,15 +15,15 @@ for folder in ["build", "dist"]:
     if os.path.exists(folder):
         shutil.rmtree(folder)
         print(f"🧹 Dossier '{folder}' supprimé")
-if os.path.exists("mumble_bridge_v2.spec"):
-    os.remove("mumble_bridge_v2.spec")
+if os.path.exists("mumble_bridge.spec"):
+    os.remove("mumble_bridge.spec")
     print("🧹 Fichier .spec supprimé")
 
 # Commande PyInstaller
 cmd = [
     sys.executable, "-m", "PyInstaller",
     "--onefile",
-    "mumble_bridge_v2.py"
+    "mumble_bridge.py"
 ]
 
 print(f"\n🔨 Compilation en cours...")
@@ -35,4 +35,4 @@ if result.returncode != 0:
     print("\n❌ Build échoué.")
     sys.exit(1)
 
-print("\n✅ Build réussi ! Exécutable : dist\\mumble_bridge_v2.exe")
+print("\n✅ Build réussi ! Exécutable : dist\\mumble_bridge.exe")
