@@ -76,6 +76,15 @@ window.addEventListener('AddToken', (event) => {
     if (token?.character?.name?.toLowerCase() === MY_CHARACTER_NAME.toLowerCase()) {
         console.log(`🔄 [PONT] Token de "${MY_CHARACTER_NAME}" recréé, nouvelle key : ${token.key}`);
         chrome.storage.local.set({ myTokenId: token.key });
+
+        if (localSocket && localSocket.readyState === WebSocket.OPEN) {
+            localSocket.send(JSON.stringify({
+                player_id: token.key,
+                x: token.x,
+                y: token.y,
+                scene: data.sceneId
+            }));
+        }
     }
 });
 
