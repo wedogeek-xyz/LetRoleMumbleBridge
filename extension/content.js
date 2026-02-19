@@ -65,6 +65,21 @@ window.addEventListener('LetsRoleTokenMove', (event) => {
 
 
 // ==========================================
+// ➕ ADD TOKEN : mise à jour si le token du personnage est recréé
+// ==========================================
+window.addEventListener('AddToken', (event) => {
+    const data = event.detail;
+
+    if (!MY_CHARACTER_NAME) return;
+
+    const token = data?.token;
+    if (token?.character?.name?.toLowerCase() === MY_CHARACTER_NAME.toLowerCase()) {
+        console.log(`🔄 [PONT] Token de "${MY_CHARACTER_NAME}" recréé, nouvelle key : ${token.key}`);
+        chrome.storage.local.set({ myTokenId: token.key });
+    }
+});
+
+// ==========================================
 // 🗺️ INIT SCÈNE : détection automatique du token
 // ==========================================
 window.addEventListener('InitScene', (event) => {

@@ -44,9 +44,12 @@ function analyserMessage(dataStr, direction) {
                 window.dispatchEvent(new CustomEvent('LetsRoleTokenMove', { detail: data }));
             }
 
-             if (data.a === 'display' && data.c === "scene" ) {
-                console.log(`🎯 [ESPION] InitScene:`);
+            if (data.a === 'display' && data.c === "scene" ) {
                 window.dispatchEvent(new CustomEvent('InitScene', { detail: data }));
+            }
+
+            if (data.a === 'addToken' && data.c === "scene") {
+                window.dispatchEvent(new CustomEvent('AddToken', { detail: data }));
             }
         }
     } catch (e) {
