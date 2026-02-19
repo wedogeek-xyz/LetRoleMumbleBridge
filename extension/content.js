@@ -39,7 +39,8 @@ window.addEventListener('LetsRoleTokenMove', (event) => {
         localSocket.send(JSON.stringify({
             player_id: data.key,
             x: data.x,
-            y: data.y
+            y: data.y,
+            scene : data.scene
         }));
     }
 });
