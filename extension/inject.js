@@ -43,6 +43,10 @@ function analyserMessage(dataStr, direction) {
                 // On passe le relais au facteur (content.js)
                 window.dispatchEvent(new CustomEvent('LetsRoleTokenMove', { detail: data }));
             }
+
+             if (data.a === 'display' && data.c === "scene" ) {
+                window.dispatchEvent(new CustomEvent('InitScene', { detail: data }));
+            }
         }
     } catch (e) {
         // On ignore silencieusement tout ce qui n'est pas du JSON

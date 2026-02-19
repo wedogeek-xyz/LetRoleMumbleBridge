@@ -1,10 +1,4 @@
 // ==========================================
-// ⚙️ TA CONFIGURATION
-// ==========================================
-// Remets bien ton ID de token ici !
-const MY_TOKEN_ID = "3597e7fd-5c03-418a-905d-4e7e898a72c6"; 
-
-// ==========================================
 // 📡 LE PONT
 // ==========================================
 let localSocket = null;
@@ -16,6 +10,27 @@ function connectToPython() {
 connectToPython();
 
 // ==========================================
+// ⚙️ TOKEN ID (chargé depuis le stockage de l'extension)
+// ==========================================
+let MY_TOKEN_ID = null;
+
+chrome.storage.local.get('myTokenId', (data) => {
+    MY_TOKEN_ID = data.myTokenId || null;
+    if (MY_TOKEN_ID) {
+        console.log(`🎯 [PONT] Token chargé : ${MY_TOKEN_ID}`);
+    } else {
+        console.warn("⚠️ [PONT] Aucun token configuré. Clique sur l'icône de l'extension pour le saisir.");
+    }
+});
+
+chrome.storage.onChanged.addListener((changes) => {
+    if (changes.myTokenId) {
+        MY_TOKEN_ID = changes.myTokenId.newValue || null;
+        console.log(`🔄 [PONT] Token mis à jour : ${MY_TOKEN_ID}`);
+    }
+});
+
+// ==========================================
 // 🕵️ INJECTION
 // ==========================================
 const script = document.createElement('script');
@@ -25,14 +40,11 @@ script.src = chrome.runtime.getURL('inject.js');
 window.addEventListener('LetsRoleTokenMove', (event) => {
     const data = event.detail;
 
-    // Affiche l'ID dans la console pour debug
-    // console.log("Token bougé:", data.key);
-
-    // On ne traite que TON token
-    if (data.key !== MY_TOKEN_ID) {
-        return; 
+    if (!MY_TOKEN_ID || data.key !== MY_TOKEN_ID) {
+        return;
     }
-
+    
+    console.log(`📤 TOEKN INFO  =${data.key}, =${MY_TOKEN_ID}`);
     console.log(`📤 Envoi vers Mumble : X=${data.x}, Y=${data.y}`);
 
     if (localSocket && localSocket.readyState === WebSocket.OPEN) {
@@ -40,7 +52,7 @@ window.addEventListener('LetsRoleTokenMove', (event) => {
             player_id: data.key,
             x: data.x,
             y: data.y,
-            scene : data.scene
+            scene: data.scene
         }));
     }
 });

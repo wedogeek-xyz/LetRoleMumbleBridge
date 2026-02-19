@@ -131,7 +131,7 @@ async def websocket_server(websocket):
             raw_x = float(data.get('x', 0))
             raw_y = float(data.get('y', 0))
             scene = str(data.get('scene', ""))
-
+            idPlayer = str(data.get('player_id', ""))
             # Sélection du pixels_per_meter selon la scène
             scenes = SCENES_CONFIG.get("scenes", {})
             if scene in scenes:
@@ -144,7 +144,7 @@ async def websocket_server(websocket):
             current_pos["z"] = raw_y / pixels_per_meter
 
             # Affichage console
-            print(f"📍 Scène {scene} ({pixels_per_meter}px/m) | X={current_pos['x']:.1f}m, Z={current_pos['z']:.1f}m   ", end="\r")
+            print(f"📍 Scène {scene} ({pixels_per_meter}px/m) | X={current_pos['x']:.1f}m, Z={current_pos['z']:.1f}m   {idPlayer}  ", end="\r")
             
     except websockets.exceptions.ConnectionClosed:
         print("\n🔴 Navigateur déconnecté.")
