@@ -45,6 +45,7 @@ function analyserMessage(dataStr, direction) {
             }
 
              if (data.a === 'display' && data.c === "scene" ) {
+                console.log(`🎯 [ESPION] InitScene:`);
                 window.dispatchEvent(new CustomEvent('InitScene', { detail: data }));
             }
         }

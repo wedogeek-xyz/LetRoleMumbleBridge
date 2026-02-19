@@ -8,7 +8,7 @@
     label { font-size: 12px; color: #555; display: block; margin-bottom: 4px; }
     input {
       width: 100%; box-sizing: border-box;
-      padding: 7px; font-size: 12px; font-family: monospace;
+      padding: 7px; font-size: 13px;
       border: 1px solid #ccc; border-radius: 4px;
       margin-bottom: 10px;
     }
@@ -20,16 +20,25 @@
     }
     button:hover { background: #357abd; }
     #status { margin-top: 8px; font-size: 12px; color: green; text-align: center; min-height: 16px; }
+    .detected {
+      margin-top: 10px; padding: 8px;
+      background: #f5f5f5; border-radius: 4px;
+      font-size: 11px; color: #666;
+    }
+    .detected span { font-family: monospace; color: #333; word-break: break-all; }
     .hint { font-size: 11px; color: #999; margin-bottom: 10px; }
   </style>
 </head>
 <body>
   <h3>🎲 Let's Role · Spatial Audio</h3>
-  <label>Mon Token ID</label>
-  <input type="text" id="tokenId" placeholder="ex: 3597e7fd-5c03-418a-..." />
-  <p class="hint">Colle l'ID de ton token Let's Role (visible dans la console du navigateur lors d'un déplacement).</p>
+  <label>Nom du personnage</label>
+  <input type="text" id="characterName" placeholder="ex: thalgrum" />
+  <p class="hint">Le token ID sera détecté automatiquement au chargement de la scène.</p>
   <button id="save">Enregistrer</button>
   <div id="status"></div>
+  <div class="detected">
+    Token détecté : <span id="tokenDisplay">—</span>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>
