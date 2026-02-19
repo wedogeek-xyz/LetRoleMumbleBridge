@@ -8,9 +8,7 @@ import os
 import shutil
 import Ice
 
-# Trouve automatiquement le dossier slice de zeroc-ice sur ce poste
-slice_dir = os.path.normpath(Ice.getSliceDir())
-print(f"📦 Dossier slice Ice trouvé : {slice_dir}")
+
 
 # Nettoyage
 for folder in ["build", "dist"]:
@@ -25,7 +23,6 @@ if os.path.exists("mumble_bridge_v2.spec"):
 cmd = [
     sys.executable, "-m", "PyInstaller",
     "--onefile",
-    "--add-data", f"{slice_dir}{os.pathsep}slice",
     "mumble_bridge_v2.py"
 ]
 
@@ -34,9 +31,8 @@ print(f"   Commande : {' '.join(cmd)}\n")
 
 result = subprocess.run(cmd)
 
-if result.returncode == 0:
-    print("\n✅ Build réussi ! Exécutable : dist\\mumble_bridge_v2.exe")
-    print("   N'oublie pas de copier MumbleServer.ice dans dist\\")
-else:
+if result.returncode != 0:
     print("\n❌ Build échoué.")
     sys.exit(1)
+
+print("\n✅ Build réussi ! Exécutable : dist\\mumble_bridge_v2.exe")
