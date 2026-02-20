@@ -1,0 +1,79 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  # ──────────────────────────────────────────────────────────────────
+  # Zip du pont Mumble (sources Python + run.bat + config)
+  # ──────────────────────────────────────────────────────────────────
+  build-bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Convertir run.bat en CRLF et zipper
+        run: |
+          sudo apt-get install -y --quiet dos2unix
+          unix2dos mumble_bridge/run.bat
+          zip -j mumble-bridge.zip \
+            mumble_bridge/mumble_bridge.py \
+            mumble_bridge/scenes_config.json \
+            mumble_bridge/run.bat
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mumble-bridge
+          path: mumble-bridge.zip
+
+  # ──────────────────────────────────────────────────────────────────
+  # Zip de l'extension Chrome
+  # ──────────────────────────────────────────────────────────────────
+  build-extension:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Zipper l'extension
+        run: zip -r lets-role-spatial-audio.zip extension/ --exclude "extension/*.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: extension
+          path: lets-role-spatial-audio.zip
+
+  # ──────────────────────────────────────────────────────────────────
+  # Création de la release GitHub avec les fichiers en assets
+  # ──────────────────────────────────────────────────────────────────
+  release:
+    needs: [build-bridge, build-extension]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: mumble-bridge
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: extension
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            mumble-bridge.zip
+            lets-role-spatial-audio.zip
+          body: |
+            ## Let's Role · Spatial Audio
+
+            ### Téléchargements
+
+            - **mumble-bridge.zip** : Pont Mumble — extraire et lancer `run.bat` (Python requis)
+            - **lets-role-spatial-audio.zip** : Extension Chrome
+
+            ### Prérequis pont Mumble
+            - [Python 3.x](https://www.python.org/downloads/) avec "Add to PATH" coché
+            - Double-cliquer sur `run.bat` pour démarrer
