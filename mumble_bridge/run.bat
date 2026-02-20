@@ -1,4 +1,5 @@
 @echo off
+cd /d "%~dp0"
 chcp 65001 >nul
 echo ==========================================
 echo   Let's Role - Spatial Audio - Pont Mumble
