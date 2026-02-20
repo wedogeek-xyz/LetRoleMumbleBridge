@@ -10,8 +10,6 @@ Pas besoin de régler quoi que ce soit pendant la session — les positions se m
 
 ## Comment ça marche ?
 
-### Vue d'ensemble
-
 ```
 Let's Role (navigateur Chrome)
         │
@@ -34,70 +32,89 @@ Let's Role (navigateur Chrome)
 
 ### Les deux composants
 
-**1. L'extension Chrome (chez chaque joueur)**
-Une extension installée dans Chrome lit en temps réel la position du token du joueur sur la carte Let's Role et l'envoie au bridge Python local via WebSocket. Pas de configuration complexe — l'extension tourne automatiquement dès que Let's Role est ouvert.
+**1. L'extension Chrome** (chez chaque joueur)
+Lit en temps réel la position du token du joueur sur la carte Let's Role et l'envoie au bridge local. Elle détecte automatiquement l'ID du token à partir du nom du personnage configuré — même si cet ID change en cours de partie.
 
-Code source dans `extension` 
-
-**2. Le bridge Python (chez chaque joueur)**
-Un petit script Python tourne en arrière-plan sur le PC de chaque joueur. Il reçoit la position envoyée par l'extension Chrome et l'écrit dans MumbleLink — la mémoire partagée que Mumble surveille pour positionner les voix en 3D. C'est le seul "pont" entre le navigateur et Mumble.
-
-
-Code source dans `mumble_bridge` 
+**2. Le bridge Python** (chez chaque joueur)
+Petit script Python qui tourne en arrière-plan. Il reçoit la position envoyée par l'extension et l'écrit dans MumbleLink — la mémoire partagée que Mumble surveille pour positionner les voix en 3D.
 
 ---
 
 ## Prérequis
 
-### Côté serveur Mumble
-- **Mumble Server (Murmur)** installé et fonctionnel
-- L'audio positionnel fonctionne entièrement **côté client** — aucune configuration serveur particulière n'est nécessaire pour la spatialisation
-
-### Chez chaque joueur
-- Windows (MumbleLink utilise la mémoire partagée Windows)
+- Windows (MumbleLink est une API Windows)
 - **Google Chrome** avec l'extension installée
-- **Python 3.x** avec la bibliothèque `websockets`
+- **Python 3.x** — téléchargeable sur [python.org](https://www.python.org/downloads/) — cocher **"Add Python to PATH"** lors de l'installation
 - **Client Mumble** installé et connecté au serveur
 
 ---
 
-## Configuration initiale (à faire une seule fois)
+## Installation
 
-### 1. Installer l'extension Chrome
-Chaque joueur installe l'extension dans Chrome. Elle se connecte automatiquement au bridge Python local au démarrage de Let's Role.
+### 1. Le bridge Python
 
-### 2. Lancer le bridge Python
-Chaque joueur lance le bridge Python en arrière-plan avant la session. Il suffit de le démarrer une fois — il tourne silencieusement et ne nécessite aucune interaction.
+1. Télécharge **mumble-bridge.zip** depuis la [dernière release](../../releases)
+2. Extraire le zip dans un dossier de ton choix
+3. Double-clique sur **run.bat** — les dépendances s'installent automatiquement au premier lancement
 
-### 3. Se connecter à Mumble normalement
-La session Let's Role commence — dès que les tokens bougent sur la carte, les voix se positionnent automatiquement dans Mumble.
+> Le fichier `scenes_config.json` (dans le même dossier) permet de configurer le nombre de pixels par mètre selon l'ID de la scène. Tu peux l'éditer sans relancer le bridge : tape `r` + Entrée dans la console pour recharger la configuration à chaud.
+
+### 2. L'extension Chrome
+
+1. Télécharge **lets-role-spatial-audio.zip** depuis la [dernière release](../../releases)
+2. Extraire le zip
+3. Dans Chrome, ouvre `chrome://extensions`
+4. Active le **Mode développeur** (en haut à droite)
+5. Clique sur **"Charger l'extension non empaquetée"** et sélectionne le dossier extrait
+6. Clique sur l'icône de l'extension dans la barre Chrome
+7. Saisis le **nom de ton personnage** (ex: `thalgrum`) et clique **Enregistrer**
+
+> Le token ID est détecté automatiquement au chargement de la scène. Si le token est recréé en cours de partie, la mise à jour est automatique.
+
+### 3. Lancer une session
+
+1. Lance **run.bat** avant d'ouvrir Let's Role
+2. Connecte-toi à Mumble normalement
+3. Ouvre Let's Role dans Chrome — dès que les tokens bougent, les voix se positionnent automatiquement
+
+---
+
+## Configuration des scènes (`scenes_config.json`)
+
+Ce fichier associe un ID de scène Let's Role à une valeur de pixels par mètre, qui calibre la distance sonore.
+
+```json
+{
+    "default_pixels_per_meter": 50,
+    "scenes": {
+        "408970": 50,
+        "123456": 100
+    }
+}
+```
+
+- **`default_pixels_per_meter`** : valeur utilisée si la scène n'est pas listée
+- **`scenes`** : map `ID de scène → pixels/mètre`
+
+Pour recharger sans redémarrer : tape **`r`** + Entrée dans la console du bridge.
 
 ---
 
 ## Pourquoi cette architecture ?
 
-### Ce qu'on a exploré
-L'idée initiale était de tout gérer côté serveur Mumble via l'API Ice (interface d'administration de Murmur), sans que les joueurs aient à faire tourner quoi que ce soit localement.
-
-### Ce qu'on a découvert
-L'audio positionnel dans Mumble fonctionne **entièrement côté client**. Le serveur ne fait que redistribuer les données de position entre les clients — il ne calcule rien lui-même. Il est donc impossible de "pousser" des positions depuis le serveur : chaque client Mumble doit recevoir et traiter sa propre position localement via MumbleLink.
-
-C'est d'ailleurs une conception intelligente : avec N joueurs, il y aurait N² flux audio à calculer côté serveur. En le faisant côté client, chaque machine ne calcule que les N-1 autres positions qui la concernent.
-
-### Conclusion
-Le mini-script client est inévitable, mais il est volontairement **très simple** : pas de configuration Ice, pas de serveur à administrer. Juste un script léger qui tourne en arrière-plan.
+L'audio positionnel dans Mumble fonctionne **entièrement côté client**. Le serveur ne fait que redistribuer les données de position — il ne calcule rien lui-même. Chaque client Mumble doit donc recevoir et traiter sa propre position localement via MumbleLink. Le bridge est inévitable, mais volontairement minimaliste : pas de configuration serveur, juste un script léger en arrière-plan.
 
 ---
 
 ## Limites connues
 
 - **Windows uniquement** pour les joueurs (MumbleLink est une API Windows)
-- **Chrome uniquement** pour le navigateur (l'extension est développée pour Chrome)
-- Le bridge Python doit être lancé avant d'ouvrir Let's Role
+- **Chrome uniquement** (l'extension utilise les APIs Chrome)
+- Le bridge doit être lancé avant d'ouvrir Let's Role
 
 ---
 
 ## Crédits
 
-Projet développé pour les sessions JDR en ligne avec Let's Role + Mumble.  
+Projet développé pour les sessions JDR en ligne avec Let's Role + Mumble.
 Basé sur le protocole **MumbleLink** (standard officiel Mumble pour l'audio positionnel).
