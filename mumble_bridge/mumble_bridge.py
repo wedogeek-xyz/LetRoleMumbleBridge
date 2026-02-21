@@ -52,7 +52,7 @@ class Link(ctypes.Structure):
     ]
 
 # Variables globales
-current_pos = {"x": 0.0, "z": 0.0, "scene": "default"}
+current_pos = {"x": 0.0, "z": 0.0, "scene": "default", "rotation": 0.0}
 start_offset = {"x": None, "z": None}
 pixels_per_meter = PIXELS_PER_METER  # sera mis à jour selon la scène active
 
@@ -97,10 +97,11 @@ async def mumble_heartbeat():
         lnk.fAvatarPosition[1] = 0.0
         lnk.fAvatarPosition[2] = z
 
-        # Vecteur avant (Nord)
-        lnk.fAvatarFront[0] = 0.0
+        # Vecteur avant — calculé depuis la rotation du token (degrés, sens horaire depuis le haut)
+        rot_rad = math.radians(current_pos["rotation"])
+        lnk.fAvatarFront[0] = math.sin(rot_rad)
         lnk.fAvatarFront[1] = 0.0
-        lnk.fAvatarFront[2] = 1.0 
+        lnk.fAvatarFront[2] = -math.cos(rot_rad)
         lnk.fAvatarTop[0] = 0.0
         lnk.fAvatarTop[1] = 1.0
         lnk.fAvatarTop[2] = 0.0
@@ -128,25 +129,27 @@ async def websocket_server(websocket):
         async for message in websocket:
             data = json.loads(message)
 
-            # On prend les vraies coordonnées de la carte Let's Role
-            raw_x = float(data.get('x', 0))
-            raw_y = float(data.get('y', 0))
             scene = str(data.get('scene', ""))
-            idPlayer = str(data.get('player_id', ""))
-            # Sélection du pixels_per_meter selon la scène
-            scenes = SCENES_CONFIG.get("scenes", {})
-            if scene in scenes:
-                pixels_per_meter = scenes[scene]
-            else:
-                pixels_per_meter = SCENES_CONFIG["default_pixels_per_meter"]
 
-            # PLUS DE CALIBRAGE ! On convertit directement en mètres
-            current_pos["x"] = raw_x / pixels_per_meter
-            current_pos["z"] = raw_y / pixels_per_meter
+            # Mise à jour de la rotation si présente
+            if 'rotation' in data:
+                current_pos["rotation"] = float(data['rotation'])
+
+            # Mise à jour de la position si présente
+            if 'x' in data and 'y' in data:
+                raw_x = float(data['x'])
+                raw_y = float(data['y'])
+
+                scenes = SCENES_CONFIG.get("scenes", {})
+                pixels_per_meter = scenes.get(scene, SCENES_CONFIG["default_pixels_per_meter"])
+
+                current_pos["x"] = raw_x / pixels_per_meter
+                current_pos["z"] = raw_y / pixels_per_meter
+
             current_pos["scene"] = scene
 
             # Affichage console
-            print(f"📍 Scène {current_pos["scene"]} ({pixels_per_meter}px/m) | X={current_pos['x']:.1f}m, Z={current_pos['z']:.1f}m   {idPlayer}  ", end="\r")
+            print(f"📍 Scène {scene} ({pixels_per_meter}px/m) | X={current_pos['x']:.1f}m, Z={current_pos['z']:.1f}m | rot={current_pos['rotation']:.1f}°  ", end="\r")
             
     except websockets.exceptions.ConnectionClosed:
         print("\n🔴 Navigateur déconnecté.")

@@ -51,6 +51,10 @@ function analyserMessage(dataStr, direction) {
             if (data.a === 'addToken' && data.c === "scene") {
                 window.dispatchEvent(new CustomEvent('AddToken', { detail: data }));
             }
+
+            if (data.a === 'transformItem' && data.c === "scene") {
+                window.dispatchEvent(new CustomEvent('TransformItem', { detail: data }));
+            }
         }
     } catch (e) {
         // On ignore silencieusement tout ce qui n'est pas du JSON

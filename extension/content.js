@@ -65,6 +65,23 @@ window.addEventListener('LetsRoleTokenMove', (event) => {
 
 
 // ==========================================
+// 🔄 TRANSFORM ITEM : rotation du token
+// ==========================================
+window.addEventListener('TransformItem', (event) => {
+    const data = event.detail;
+
+    if (!MY_TOKEN_ID || data.key !== MY_TOKEN_ID) return;
+
+    if (localSocket && localSocket.readyState === WebSocket.OPEN) {
+        localSocket.send(JSON.stringify({
+            player_id: data.key,
+            rotation: data.rotation,
+            scene: data.scene
+        }));
+    }
+});
+
+// ==========================================
 // ➕ ADD TOKEN : mise à jour si le token du personnage est recréé
 // ==========================================
 window.addEventListener('AddToken', (event) => {
