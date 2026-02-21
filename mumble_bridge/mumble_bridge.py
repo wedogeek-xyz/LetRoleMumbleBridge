@@ -6,6 +6,10 @@ import ctypes
 import math
 import sys
 import os
+import threading
+import queue
+import tkinter as tk
+from tkinter import ttk
 
 # ==========================================
 # CONFIGURATION
@@ -19,42 +23,44 @@ def load_scenes_config():
     try:
         with open(config_path, "r") as f:
             config = json.load(f)
-        print(f"✅ Config scènes chargée : {len(config.get('scenes', {}))} scène(s) configurée(s)")
+        n = len(config.get('scenes', {}))
+        ui_queue.put({'type': 'log', 'text': f"✅ Config chargée : {n} scène(s)"})
         return config
     except FileNotFoundError:
-        print(f"⚠️ Fichier scenes_config.json introuvable, valeur par défaut : 50 px/m")
+        ui_queue.put({'type': 'log', 'text': "⚠️ scenes_config.json introuvable, défaut : 50 px/m"})
         return {"default_pixels_per_meter": 50, "scenes": {}}
     except json.JSONDecodeError as e:
-        print(f"⚠️ Erreur de lecture scenes_config.json : {e}, valeur par défaut : 50 px/m")
+        ui_queue.put({'type': 'log', 'text': f"⚠️ Erreur JSON : {e}"})
         return {"default_pixels_per_meter": 50, "scenes": {}}
-
-SCENES_CONFIG = load_scenes_config()
-PIXELS_PER_METER = SCENES_CONFIG["default_pixels_per_meter"]  # valeur par défaut
 
 # ==========================================
 # STRUCTURE MUMBLE LINK
 # ==========================================
 class Link(ctypes.Structure):
     _fields_ = [
-        ("uiVersion", ctypes.c_uint32),
-        ("uiTick", ctypes.c_uint32),
-        ("fAvatarPosition", ctypes.c_float * 3),
-        ("fAvatarFront", ctypes.c_float * 3),
-        ("fAvatarTop", ctypes.c_float * 3),
-        ("name", ctypes.c_wchar * 256),
-        ("fCameraPosition", ctypes.c_float * 3),
-        ("fCameraFront", ctypes.c_float * 3),
-        ("fCameraTop", ctypes.c_float * 3),
-        ("identity", ctypes.c_wchar * 256),
-        ("context_len", ctypes.c_uint32),
-        ("context", ctypes.c_ubyte * 256),
-        ("description", ctypes.c_wchar * 2048)
+        ("uiVersion",        ctypes.c_uint32),
+        ("uiTick",           ctypes.c_uint32),
+        ("fAvatarPosition",  ctypes.c_float * 3),
+        ("fAvatarFront",     ctypes.c_float * 3),
+        ("fAvatarTop",       ctypes.c_float * 3),
+        ("name",             ctypes.c_wchar * 256),
+        ("fCameraPosition",  ctypes.c_float * 3),
+        ("fCameraFront",     ctypes.c_float * 3),
+        ("fCameraTop",       ctypes.c_float * 3),
+        ("identity",         ctypes.c_wchar * 256),
+        ("context_len",      ctypes.c_uint32),
+        ("context",          ctypes.c_ubyte * 256),
+        ("description",      ctypes.c_wchar * 2048)
     ]
 
-# Variables globales
-current_pos = {"x": 0.0, "z": 0.0, "scene": "default", "rotation": 0.0}
-start_offset = {"x": None, "z": None}
-pixels_per_meter = PIXELS_PER_METER  # sera mis à jour selon la scène active
+# ==========================================
+# ÉTAT GLOBAL
+# ==========================================
+current_pos    = {"x": 0.0, "z": 0.0, "scene": "default", "rotation": 0.0}
+pixels_per_meter = 50
+ui_queue       = queue.Queue()
+reload_event   = threading.Event()
+SCENES_CONFIG  = {}   # initialisé après démarrage du thread asyncio
 
 def init_mumble():
     try:
@@ -64,112 +70,222 @@ def init_mumble():
         return None
 
 # ==========================================
-# HB
+# HEARTBEAT
 # ==========================================
 async def mumble_heartbeat():
-    print("❤️ Heartbeat activé (50Hz)...")
     shm = init_mumble()
     if not shm:
-        print("❌ Impossible d'accéder à la Mumble")
+        ui_queue.put({'type': 'log', 'text': "❌ Impossible d'accéder à MumbleLink"})
+        ui_queue.put({'type': 'mumble', 'ok': False})
         return
 
-    lnk = Link.from_buffer(shm)
+    ui_queue.put({'type': 'mumble', 'ok': True})
+    lnk  = Link.from_buffer(shm)
     tick = 0
 
     while True:
         lnk.uiVersion = 2
-        lnk.uiTick = tick
+        lnk.uiTick    = tick
         tick += 1
-        
-        lnk.name = "Let's Role"
+
+        lnk.name        = "Let's Role"
         lnk.description = "Audio Spatialisé"
 
-        context_bytes = ("wdg_" + current_pos["scene"]).encode('utf-8')
+        context_bytes   = ("wdg_" + current_pos["scene"]).encode('utf-8')
         lnk.context_len = len(context_bytes)
         ctypes.memmove(lnk.context, context_bytes, lnk.context_len)
 
-        # Lecture de la position actuelle
         x = current_pos["x"]
         z = current_pos["z"]
 
-        # Mise à jour Avatar
         lnk.fAvatarPosition[0] = x
         lnk.fAvatarPosition[1] = 0.0
         lnk.fAvatarPosition[2] = z
 
-        # Vecteur avant — calculé depuis la rotation du token (degrés, sens horaire depuis le haut)
         rot_rad = math.radians(current_pos["rotation"])
         lnk.fAvatarFront[0] = math.sin(rot_rad)
         lnk.fAvatarFront[1] = 0.0
         lnk.fAvatarFront[2] = -math.cos(rot_rad)
-        lnk.fAvatarTop[0] = 0.0
-        lnk.fAvatarTop[1] = 1.0
-        lnk.fAvatarTop[2] = 0.0
+        lnk.fAvatarTop[0]   = 0.0
+        lnk.fAvatarTop[1]   = 1.0
+        lnk.fAvatarTop[2]   = 0.0
 
-        # Mise à jour Caméra
         lnk.fCameraPosition[0] = x
         lnk.fCameraPosition[1] = 0.0
         lnk.fCameraPosition[2] = z
-        lnk.fCameraFront[0] = 0.0
-        lnk.fCameraFront[1] = 0.0
-        lnk.fCameraFront[2] = 1.0
-        lnk.fCameraTop[0] = 0.0
-        lnk.fCameraTop[1] = 1.0
-        lnk.fCameraTop[2] = 0.0
+        lnk.fCameraFront[0]    = 0.0
+        lnk.fCameraFront[1]    = 0.0
+        lnk.fCameraFront[2]    = 1.0
+        lnk.fCameraTop[0]      = 0.0
+        lnk.fCameraTop[1]      = 1.0
+        lnk.fCameraTop[2]      = 0.0
 
-        await asyncio.sleep(0.02) # 50 fois par seconde
+        await asyncio.sleep(0.02)
 
 # ==========================================
-# 📡 SERVEUR WEBSOCKET (VERSION MULTIJOUEUR)
+# SERVEUR WEBSOCKET
 # ==========================================
 async def websocket_server(websocket):
     global pixels_per_meter
-    print("🟢 Navigateur connecté ! En attente de mouvement...")
+    ui_queue.put({'type': 'browser', 'connected': True})
+    ui_queue.put({'type': 'log', 'text': "🟢 Navigateur connecté"})
     try:
         async for message in websocket:
-            data = json.loads(message)
-
+            data  = json.loads(message)
             scene = str(data.get('scene', ""))
 
-            # Mise à jour de la rotation si présente
             if 'rotation' in data:
                 current_pos["rotation"] = float(data['rotation'])
 
-            # Mise à jour de la position si présente
             if 'x' in data and 'y' in data:
                 raw_x = float(data['x'])
                 raw_y = float(data['y'])
-
                 scenes = SCENES_CONFIG.get("scenes", {})
-                pixels_per_meter = scenes.get(scene, SCENES_CONFIG["default_pixels_per_meter"])
-
+                pixels_per_meter = scenes.get(scene, SCENES_CONFIG.get("default_pixels_per_meter", 50))
                 current_pos["x"] = raw_x / pixels_per_meter
                 current_pos["z"] = raw_y / pixels_per_meter
 
             current_pos["scene"] = scene
 
-            # Affichage console
-            print(f"📍 Scène {scene} ({pixels_per_meter}px/m) | X={current_pos['x']:.1f}m, Z={current_pos['z']:.1f}m | rot={current_pos['rotation']:.1f}°  ", end="\r")
-            
+            ui_queue.put({'type': 'position',
+                          'scene':    scene,
+                          'x':        current_pos["x"],
+                          'z':        current_pos["z"],
+                          'rotation': current_pos["rotation"],
+                          'ppm':      pixels_per_meter})
     except websockets.exceptions.ConnectionClosed:
-        print("\n🔴 Navigateur déconnecté.")
+        ui_queue.put({'type': 'browser', 'connected': False})
+        ui_queue.put({'type': 'log', 'text': "🔴 Navigateur déconnecté"})
 
-async def console_listener():
-    print("💡 Tape 'r' + Entrée pour recharger scenes_config.json")
+# ==========================================
+# RECHARGEMENT CONFIG (déclenché par le bouton)
+# ==========================================
+async def reload_watcher():
     loop = asyncio.get_event_loop()
     while True:
-        line = await loop.run_in_executor(None, sys.stdin.readline)
-        if line.strip().lower() == "r":
+        triggered = await loop.run_in_executor(None, lambda: reload_event.wait(timeout=1.0))
+        if triggered:
+            reload_event.clear()
             global SCENES_CONFIG
             SCENES_CONFIG = load_scenes_config()
-            print("🔄 Config rechargée !")
 
+# ==========================================
+# BOUCLE ASYNCIO (thread secondaire)
+# ==========================================
 async def main():
-    print("🚀 Pont Mumble V2 démarré...")
+    global SCENES_CONFIG
+    SCENES_CONFIG = load_scenes_config()
+    ui_queue.put({'type': 'log', 'text': "🚀 Pont Mumble démarré"})
     asyncio.create_task(mumble_heartbeat())
-    asyncio.create_task(console_listener())
+    asyncio.create_task(reload_watcher())
     async with websockets.serve(websocket_server, "localhost", 8080):
         await asyncio.Future()
 
-if __name__ == "__main__":
+def run_asyncio():
     asyncio.run(main())
+
+# ==========================================
+# INTERFACE GRAPHIQUE
+# ==========================================
+class BridgeApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Let's Role · Spatial Audio")
+        self.root.resizable(False, False)
+        self.root.configure(padx=14, pady=14)
+
+        # ── Statuts ───────────────────────────────────
+        status_frame = ttk.Frame(root)
+        status_frame.pack(fill='x', pady=(0, 10))
+
+        # Mumble
+        mumble_col = ttk.Frame(status_frame)
+        mumble_col.pack(side='left', expand=True)
+        self.mumble_dot   = tk.Label(mumble_col, text='●', fg='#888888', font=('', 13))
+        self.mumble_dot.pack()
+        ttk.Label(mumble_col, text='MumbleLink').pack()
+
+        # Navigateur
+        browser_col = ttk.Frame(status_frame)
+        browser_col.pack(side='left', expand=True)
+        self.browser_dot  = tk.Label(browser_col, text='●', fg='#888888', font=('', 13))
+        self.browser_dot.pack()
+        ttk.Label(browser_col, text='Navigateur').pack()
+
+        ttk.Separator(root, orient='horizontal').pack(fill='x', pady=(0, 10))
+
+        # ── Données temps réel ────────────────────────
+        info_frame = ttk.Frame(root)
+        info_frame.pack(fill='x', pady=(0, 10))
+
+        self.scene_var = tk.StringVar(value='—')
+        self.pos_var   = tk.StringVar(value='—')
+        self.rot_var   = tk.StringVar(value='—')
+        self.ppm_var   = tk.StringVar(value='—')
+
+        rows = [
+            ('Scène',       self.scene_var),
+            ('Position',    self.pos_var),
+            ('Rotation',    self.rot_var),
+            ('Px / mètre',  self.ppm_var),
+        ]
+        for i, (label, var) in enumerate(rows):
+            ttk.Label(info_frame, text=label + ' :', anchor='w', width=12).grid(
+                row=i, column=0, sticky='w', pady=2)
+            ttk.Label(info_frame, textvariable=var, anchor='w', width=30).grid(
+                row=i, column=1, sticky='w', pady=2)
+
+        ttk.Separator(root, orient='horizontal').pack(fill='x', pady=(0, 10))
+
+        # ── Bouton rechargement ───────────────────────
+        ttk.Button(root, text='🔄  Recharger la configuration',
+                   command=self.reload_config).pack(fill='x', pady=(0, 10))
+
+        # ── Journal ───────────────────────────────────
+        ttk.Label(root, text='Journal :', anchor='w').pack(fill='x')
+        self.log_text = tk.Text(root, height=7, width=50, state='disabled',
+                                font=('Consolas', 9), bg='#1e1e1e', fg='#cccccc',
+                                relief='flat', wrap='word', padx=4, pady=4)
+        self.log_text.pack(fill='both', expand=True)
+
+        self.poll()
+
+    def poll(self):
+        try:
+            while True:
+                msg = ui_queue.get_nowait()
+                t   = msg['type']
+                if t == 'mumble':
+                    color = '#33cc66' if msg['ok'] else '#cc3333'
+                    self.mumble_dot.config(fg=color)
+                elif t == 'browser':
+                    color = '#33cc66' if msg['connected'] else '#cc3333'
+                    self.browser_dot.config(fg=color)
+                elif t == 'position':
+                    self.scene_var.set(msg['scene'] or '—')
+                    self.pos_var.set(f"X: {msg['x']:.2f} m   Z: {msg['z']:.2f} m")
+                    self.rot_var.set(f"{msg['rotation']:.1f}°")
+                    self.ppm_var.set(str(msg['ppm']))
+                elif t == 'log':
+                    self._add_log(msg['text'])
+        except queue.Empty:
+            pass
+        self.root.after(100, self.poll)
+
+    def _add_log(self, text):
+        self.log_text.config(state='normal')
+        self.log_text.insert('end', text + '\n')
+        self.log_text.see('end')
+        self.log_text.config(state='disabled')
+
+    def reload_config(self):
+        reload_event.set()
+
+# ==========================================
+# POINT D'ENTRÉE
+# ==========================================
+if __name__ == "__main__":
+    threading.Thread(target=run_asyncio, daemon=True).start()
+    root = tk.Tk()
+    BridgeApp(root)
+    root.mainloop()
