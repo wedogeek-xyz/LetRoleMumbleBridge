@@ -52,7 +52,7 @@ class Link(ctypes.Structure):
     ]
 
 # Variables globales
-current_pos = {"x": 0.0, "z": 0.0}
+current_pos = {"x": 0.0, "z": 0.0, "scene": "default"}
 start_offset = {"x": None, "z": None}
 pixels_per_meter = PIXELS_PER_METER  # sera mis à jour selon la scène active
 
@@ -83,9 +83,10 @@ async def mumble_heartbeat():
         
         lnk.name = "Let's Role"
         lnk.description = "Audio Spatialisé"
-        context_str = "wdg" 
-        lnk.context_len = len(context_str)
-        ctypes.memmove(lnk.context, context_str.encode('utf-8'), lnk.context_len)   
+
+        context_bytes = ("wdg_" + current_pos["scene"]).encode('utf-8')
+        lnk.context_len = len(context_bytes)
+        ctypes.memmove(lnk.context, context_bytes, lnk.context_len)
 
         # Lecture de la position actuelle
         x = current_pos["x"]
@@ -142,9 +143,10 @@ async def websocket_server(websocket):
             # PLUS DE CALIBRAGE ! On convertit directement en mètres
             current_pos["x"] = raw_x / pixels_per_meter
             current_pos["z"] = raw_y / pixels_per_meter
+            current_pos["scene"] = scene
 
             # Affichage console
-            print(f"📍 Scène {scene} ({pixels_per_meter}px/m) | X={current_pos['x']:.1f}m, Z={current_pos['z']:.1f}m   {idPlayer}  ", end="\r")
+            print(f"📍 Scène {current_pos["scene"]} ({pixels_per_meter}px/m) | X={current_pos['x']:.1f}m, Z={current_pos['z']:.1f}m   {idPlayer}  ", end="\r")
             
     except websockets.exceptions.ConnectionClosed:
         print("\n🔴 Navigateur déconnecté.")
