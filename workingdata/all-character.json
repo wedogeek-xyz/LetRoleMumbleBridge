@@ -1,0 +1,90 @@
+{
+    "characters": [
+        {
+            "id": 312726,
+            "userId": 81370,
+            "name": "Turuk",
+            "avatar": "s/m/3txhcl0jlwnvvomiyxv6qhym4elpco.png",
+            "token": "l/a/h2idzm54z2yrfludr63alefxcnk6j0.png",
+            "color": "lightblue",
+            "skin": null,
+            "avatar_frame": null,
+            "token_frame": null,
+            "idle": true
+        },
+        {
+            "id": 312789,
+            "userId": 87530,
+            "name": "thalgrum",
+            "avatar": "u/i/ew6x42d3zai0l1xr62ds4sv283lssj.png",
+            "token": "1/d/sylmue7j18dtgfm5gs3dclkyrz0tiu.png",
+            "color": "red",
+            "skin": null,
+            "avatar_frame": null,
+            "token_frame": null,
+            "idle": false
+        },
+        {
+            "id": 312807,
+            "userId": 81382,
+            "name": "Ariurdred Forge-éclair",
+            "avatar": "i/m/1zemqrg5dl1zhaowvqq2pbynzbq42i.png",
+            "token": "3/t/xug67gcmb8ykxdwnh58mz8ngyhq5by.png",
+            "color": "orange",
+            "skin": null,
+            "avatar_frame": null,
+            "token_frame": null,
+            "idle": true
+        },
+        {
+            "id": 312813,
+            "userId": 81383,
+            "name": "Valen Sol",
+            "avatar": "n/f/dqff8st4riuvf07h0qq2dx0z6nvebr.png",
+            "token": "8/8/y8d51rc3wcn87npwxli420hflg2hjs.png",
+            "color": "pink",
+            "skin": null,
+            "avatar_frame": null,
+            "token_frame": null,
+            "idle": true
+        },
+        {
+            "id": 312814,
+            "userId": 78230,
+            "name": "Lee Goulas",
+            "avatar": "v/k/cxzm3i87fcw28vj6xzhgwyxny1sz4g.png",
+            "token": "d/r/lcw1pljk34d4aa7i0fkixksw6c7n70.png",
+            "color": "yellow",
+            "skin": null,
+            "avatar_frame": null,
+            "token_frame": null,
+            "idle": true
+        },
+        {
+            "id": 318957,
+            "userId": 91416,
+            "name": "Alton Jaune",
+            "avatar": "g/d/crqgz4rfiffbh2hp3hlc0m3hf00vdv.png",
+            "token": "2/n/vq2hdz6hqdpiathjj5a6muhwy4v28l.png",
+            "color": "magenta",
+            "skin": null,
+            "avatar_frame": null,
+            "token_frame": null,
+            "idle": true
+        },
+        {
+            "id": 331171,
+            "userId": 78229,
+            "name": "Kuchulem",
+            "avatar": "w/r/02kbrwnp638rpwc1brm7qott3y4s6v.png",
+            "token": "q/2/cel2ix7qqh7z8aiya1ne7mx47rgw0w.png",
+            "color": "magenta",
+            "skin": null,
+            "avatar_frame": null,
+            "token_frame": null,
+            "idle": true
+        }
+    ],
+    "c": "character",
+    "a": "all"
+}
