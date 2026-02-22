@@ -71,6 +71,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Injecter la version dans manifest.json
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          CLEAN="${TAG#v}"
+          NUMERIC="${CLEAN%%-*}"
+          jq --arg v "$NUMERIC" --arg vn "$CLEAN" \
+            '.version = $v | .version_name = $vn' \
+            extension/manifest.json > /tmp/manifest_patched.json
+          mv /tmp/manifest_patched.json extension/manifest.json
+
       - name: Zipper l'extension
         run: zip -r lets-role-spatial-audio.zip extension/ --exclude "extension/*.zip"
 

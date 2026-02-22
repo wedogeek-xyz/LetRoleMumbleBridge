@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const manifest = chrome.runtime.getManifest();
+  document.getElementById('version').textContent =
+    'v' + (manifest.version_name || manifest.version);
   const input = document.getElementById('characterName');
   const status = document.getElementById('status');
   const tokenDisplay = document.getElementById('tokenDisplay');
