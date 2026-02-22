@@ -1,0 +1,48 @@
+{
+    "users": [
+        {
+            "id": 78229,
+            "chatname": "Kuchulem",
+            "role": "gm",
+            "username": "Kuchulem"
+        },
+        {
+            "id": 81370,
+            "chatname": "Ding",
+            "role": "player",
+            "username": "Ding"
+        },
+        {
+            "id": 87530,
+            "chatname": "nayosis",
+            "role": "player",
+            "username": "nayosis"
+        },
+        {
+            "id": 81382,
+            "chatname": "mogoa",
+            "role": "player",
+            "username": "mogoa"
+        },
+        {
+            "id": 78230,
+            "chatname": "Lithyon",
+            "role": "player",
+            "username": "Lithyon"
+        },
+        {
+            "id": 81383,
+            "chatname": "Flo.",
+            "role": "player",
+            "username": "Flo."
+        },
+        {
+            "id": 91416,
+            "chatname": "alex_b",
+            "role": "player",
+            "username": "alex_b"
+        }
+    ],
+    "c": "user",
+    "a": "reloadAll"
+}
