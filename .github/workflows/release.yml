@@ -7,7 +7,42 @@ on:
 
 jobs:
   # ──────────────────────────────────────────────────────────────────
+  # Exe Windows via PyInstaller (pas besoin de Python pour l'utilisateur)
+  # ──────────────────────────────────────────────────────────────────
+  build-exe:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Installer les dépendances
+        run: pip install pyinstaller websockets
+
+      - name: Construire l'exe
+        run: pyinstaller --onefile --noconsole --name mumble_bridge mumble_bridge/mumble_bridge.py
+
+      - name: Préparer le zip
+        run: |
+          mkdir mumble-bridge-exe
+          copy dist\mumble_bridge.exe mumble-bridge-exe\
+          copy mumble_bridge\scenes_config.json mumble-bridge-exe\
+        shell: cmd
+
+      - name: Zipper
+        run: Compress-Archive -Path mumble-bridge-exe\* -DestinationPath mumble-bridge-exe.zip
+        shell: pwsh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mumble-bridge-exe
+          path: mumble-bridge-exe.zip
+
+  # ──────────────────────────────────────────────────────────────────
   # Zip du pont Mumble (sources Python + run.bat + config)
+  # Pour utilisateurs souhaitant lancer depuis les sources
   # ──────────────────────────────────────────────────────────────────
   build-bridge:
     runs-on: ubuntu-latest
@@ -48,11 +83,15 @@ jobs:
   # Création de la release GitHub avec les fichiers en assets
   # ──────────────────────────────────────────────────────────────────
   release:
-    needs: [build-bridge, build-extension]
+    needs: [build-exe, build-bridge, build-extension]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: mumble-bridge-exe
+
       - uses: actions/download-artifact@v4
         with:
           name: mumble-bridge
@@ -64,6 +103,7 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           files: |
+            mumble-bridge-exe.zip
             mumble-bridge.zip
             lets-role-spatial-audio.zip
           body: |
@@ -71,9 +111,14 @@ jobs:
 
             ### Téléchargements
 
-            - **mumble-bridge.zip** : Pont Mumble — extraire et lancer `run.bat` (Python requis)
+            - **mumble-bridge-exe.zip** : Pont Mumble — extraire et double-cliquer sur `mumble_bridge.exe` *(aucun prérequis)*
+            - **mumble-bridge.zip** : Pont Mumble — version sources, lancer `run.bat` *(Python requis)*
             - **lets-role-spatial-audio.zip** : Extension Chrome
 
-            ### Prérequis pont Mumble
+            ### Pont Mumble — exe (recommandé)
+            1. Extraire `mumble-bridge-exe.zip`
+            2. Double-cliquer sur `mumble_bridge.exe`
+
+            ### Pont Mumble — sources (Python requis)
             - [Python 3.x](https://www.python.org/downloads/) avec "Add to PATH" coché
             - Double-cliquer sur `run.bat` pour démarrer
