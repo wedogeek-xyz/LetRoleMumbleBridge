@@ -148,11 +148,12 @@ async def websocket_server(websocket):
             current_pos["scene"] = scene
 
             ui_queue.put({'type': 'position',
-                          'scene':    scene,
-                          'x':        current_pos["x"],
-                          'z':        current_pos["z"],
-                          'rotation': current_pos["rotation"],
-                          'ppm':      pixels_per_meter})
+                          'scene':     scene,
+                          'x':         current_pos["x"],
+                          'z':         current_pos["z"],
+                          'rotation':  current_pos["rotation"],
+                          'ppm':       pixels_per_meter,
+                          'player_id': data.get('player_id', '')})
     except websockets.exceptions.ConnectionClosed:
         ui_queue.put({'type': 'browser', 'connected': False})
         ui_queue.put({'type': 'log', 'text': "🔴 Navigateur déconnecté"})
@@ -218,16 +219,18 @@ class BridgeApp:
         info_frame = ttk.Frame(root)
         info_frame.pack(fill='x', pady=(0, 10))
 
-        self.scene_var = tk.StringVar(value='—')
-        self.pos_var   = tk.StringVar(value='—')
-        self.rot_var   = tk.StringVar(value='—')
-        self.ppm_var   = tk.StringVar(value='—')
+        self.scene_var  = tk.StringVar(value='—')
+        self.pos_var    = tk.StringVar(value='—')
+        self.rot_var    = tk.StringVar(value='—')
+        self.ppm_var    = tk.StringVar(value='—')
+        self.token_var  = tk.StringVar(value='—')
 
         rows = [
             ('Scène',       self.scene_var),
             ('Position',    self.pos_var),
             ('Rotation',    self.rot_var),
             ('Px / mètre',  self.ppm_var),
+            ('Token ID',    self.token_var),
         ]
         for i, (label, var) in enumerate(rows):
             ttk.Label(info_frame, text=label + ' :', anchor='w', width=12).grid(
@@ -237,9 +240,13 @@ class BridgeApp:
 
         ttk.Separator(root, orient='horizontal').pack(fill='x', pady=(0, 10))
 
-        # ── Bouton rechargement ───────────────────────
-        ttk.Button(root, text='🔄  Recharger la configuration',
-                   command=self.reload_config).pack(fill='x', pady=(0, 10))
+        # ── Boutons ───────────────────────────────────
+        btn_frame = ttk.Frame(root)
+        btn_frame.pack(fill='x', pady=(0, 10))
+        ttk.Button(btn_frame, text='🔄  Recharger la configuration',
+                   command=self.reload_config).pack(side='left', expand=True, fill='x', padx=(0, 4))
+        ttk.Button(btn_frame, text='Quitter',
+                   command=root.destroy).pack(side='left')
 
         # ── Journal ───────────────────────────────────
         ttk.Label(root, text='Journal :', anchor='w').pack(fill='x')
@@ -266,6 +273,7 @@ class BridgeApp:
                     self.pos_var.set(f"X: {msg['x']:.2f} m   Z: {msg['z']:.2f} m")
                     self.rot_var.set(f"{msg['rotation']:.1f}°")
                     self.ppm_var.set(str(msg['ppm']))
+                    self.token_var.set(msg['player_id'] or '—')
                 elif t == 'log':
                     self._add_log(msg['text'])
         except queue.Empty:
