@@ -23,6 +23,7 @@ if os.path.exists("mumble_bridge.spec"):
 cmd = [
     sys.executable, "-m", "PyInstaller",
     "--onefile",
+    "--hidden-import", "websockets",
     "mumble_bridge.py"
 ]
 
