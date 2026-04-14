@@ -147,8 +147,9 @@ Let's Role n'expose pas d'API publique de positions. L'extension intercepte les 
 
 ## Limites connues
 
-- **Windows uniquement** pour les joueurs (MumbleLink est une API Windows)
-- **Chrome uniquement** (l'extension utilise les APIs Chrome)
+- **Windows 100% fonctionnel** pour les joueurs (MumbleLink est une API Windows)
+- **Linux (WIP) : Mumble flatpak uniquement** workaround à tester pour MumbleLink, et flatpak car link n'existe pas dans les autres versions
+- **Chromium uniquement** (l'extension utilise les APIs Chromium)
 - Le bridge doit être lancé avant d'ouvrir Let's Role
 
 ---

@@ -9,6 +9,8 @@ import os
 import threading
 import queue
 import tkinter as tk
+import platform
+import os
 from tkinter import ttk
 
 # ==========================================
@@ -64,11 +66,32 @@ SCENES_CONFIG  = {}   # initialisé après démarrage du thread asyncio
 
 def init_mumble():
     try:
-        shm = mmap.mmap(0, ctypes.sizeof(Link), "MumbleLink", mmap.ACCESS_WRITE)
-        return shm
-    except Exception:
+        if platform.system() == "Windows":
+            # --- Méthode Windows ---
+            shm = mmap.mmap(0, ctypes.sizeof(Link), "MumbleLink", mmap.ACCESS_WRITE)
+            return shm
+        else:
+            # --- Méthode Linux ---
+            # Mumble crée un fichier virtuel en RAM. Il contient souvent l'UID de l'utilisateur.
+            uid = os.getuid()
+            shm_path = f"/dev/shm/MumbleLink.{uid}"
+            
+            # Fallback au cas où Mumble utiliserait l'ancien nommage sans l'UID
+            if not os.path.exists(shm_path):
+                shm_path = "/dev/shm/MumbleLink"
+                
+            # On ouvre le descripteur du fichier en lecture/écriture
+            fd = os.open(shm_path, os.O_RDWR)
+            
+            # On mappe le fichier en mémoire RAM
+            shm = mmap.mmap(fd, ctypes.sizeof(Link), mmap.MAP_SHARED, mmap.PROT_READ | mmap.PROT_WRITE)
+            return shm
+            
+    except Exception as e:
+        # Afficher l'erreur exacte aide beaucoup au débogage sur Linux
+        print(f"❌ Impossible d'accéder à la mémoire Mumble : {e}")
         return None
-
+    
 # ==========================================
 # HEARTBEAT
 # ==========================================
